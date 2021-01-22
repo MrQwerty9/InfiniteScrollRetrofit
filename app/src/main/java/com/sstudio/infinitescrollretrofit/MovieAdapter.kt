@@ -10,13 +10,13 @@ import kotlinx.android.synthetic.main.item_photos.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.PhotoViewHolder>() {
 
-    var dataPhoto: ArrayList<Movies.Result?> = ArrayList()
-    private val TYPE_PHOTO = 1
+    var dataMovies: ArrayList<Movies.Result?> = ArrayList()
+    private val TYPE_MOVIE = 1
     private val TYPE_LOADING = 2
 
     override fun getItemViewType(position: Int): Int {
-        return if (dataPhoto[position] != null) {
-            TYPE_PHOTO
+        return if (dataMovies[position] != null) {
+            TYPE_MOVIE
         } else {
             TYPE_LOADING
         }
@@ -32,25 +32,30 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.PhotoViewHolder>() {
         return PhotoViewHolder(view)
     }
 
-    override fun getItemCount(): Int = dataPhoto.size
+    override fun getItemCount(): Int = dataMovies.size
 
     override fun onBindViewHolder(photoViewHolder: PhotoViewHolder, position: Int) {
-        if (getItemViewType(position) == TYPE_PHOTO) {
-            dataPhoto[position]?.let { photoViewHolder.bind(it) }
+        if (getItemViewType(position) == TYPE_MOVIE) {
+            dataMovies[position]?.let { photoViewHolder.bind(it) }
         }
     }
 
+    fun setDataMovies(movies: List<Movies.Result>){
+        dataMovies.clear()
+        dataMovies.addAll(movies)
+    }
+
     fun addDataLoading(){
-        dataPhoto.add(null)
+        dataMovies.add(null)
         notifyDataSetChanged()
     }
     fun removeDataLoading(){
-        dataPhoto.removeAt(dataPhoto.size - 1)
+        dataMovies.removeAt(dataMovies.size - 1)
         notifyDataSetChanged()
     }
 
     inner class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(photo: Movies.Result) {
+        fun bind(movies: Movies.Result) {
 //            val url = GlideUrl(
 //                photo.backdrop_path, LazyHeaders.Builder()
 //                    .addHeader("User-Agent", "your-user-agent")
@@ -58,7 +63,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.PhotoViewHolder>() {
 //            )
             with(itemView) {
                 Glide.with(itemView.context)
-                    .load(BuildConfig.POSTER_THUMBNAIL + photo.poster_path)
+                    .load(BuildConfig.POSTER_THUMBNAIL + movies.poster_path)
                     .into(image_view)
             }
         }

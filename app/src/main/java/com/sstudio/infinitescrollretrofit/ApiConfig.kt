@@ -1,7 +1,5 @@
-package com.sstudio.pagingwithretrofit
+package com.sstudio.infinitescrollretrofit
 
-import com.sstudio.infinitescrollretrofit.ApiService
-import com.sstudio.infinitescrollretrofit.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,7 +9,6 @@ import java.util.concurrent.TimeUnit
 
 object ApiConfig {
     private var retrofit: Retrofit? = null
-    private val BASE_URL = "https://jsonplaceholder.typicode.com"
     val apiService: ApiService
         get() {
             val client = OkHttpClient.Builder()

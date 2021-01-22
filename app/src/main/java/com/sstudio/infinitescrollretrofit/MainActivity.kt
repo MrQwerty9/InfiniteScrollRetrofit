@@ -24,14 +24,13 @@ class MainActivity : AppCompatActivity() {
         rv_photos.layoutManager = layoutManager
         rv_photos.adapter = movieAdapter
 
-        mainViewModel.getPhoto.observe(this, { photos ->
-            if (movieAdapter.dataPhoto.size > 0){
+        mainViewModel.getPhoto.observe(this, { movies ->
+            if (movieAdapter.dataMovies.size > 0){
                 isScroll = true
                 movieAdapter.removeDataLoading()
             }
-            lastPage = photos.total_pages!!
-            movieAdapter.dataPhoto.clear()
-            movieAdapter.dataPhoto.addAll(photos.results)
+            lastPage = movies.total_pages!!
+            movieAdapter.setDataMovies(movies.results)
             movieAdapter.notifyDataSetChanged()
         })
 

@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.sstudio.pagingwithretrofit.ApiConfig
 
 class MainViewModel : ViewModel() {
-    private val photoDataSource = MovieDataSource(ApiConfig.apiService)
-    private val photoRepository = MovieRepository(photoDataSource)
+    private val movieDataSource = MovieDataSource(ApiConfig.apiService)
+    private val movieRepository = MovieRepository(movieDataSource)
     val page = MutableLiveData<Int>().also {
         it.value = 1
     }
@@ -18,29 +17,13 @@ class MainViewModel : ViewModel() {
     }
     var moviesPrevPage: ArrayList<Movies.Result> = ArrayList()
     var getPhoto: LiveData<Movies> = Transformations.switchMap(page) { mMovieTvId ->
-        val ab = photoRepository.getMovies(mMovieTvId)
-        Transformations.map(ab){
-            val arr: ArrayList<Movies.Result> = ArrayList()
-            arr.addAll(moviesPrevPage)
-            arr.addAll(it.results)
-            it.results = arr
-            moviesPrevPage = arr
+        Transformations.map(movieRepository.getMovies(mMovieTvId)){
+            val newMovies: ArrayList<Movies.Result> = ArrayList()
+            newMovies.addAll(moviesPrevPage)
+            newMovies.addAll(it.results)
+            it.results = newMovies
+            moviesPrevPage = newMovies
             it
         }
     }
-
-    var listMovies: LiveData<Movies>? = null
-        get() {
-            if (field == null) {
-                field = MutableLiveData()
-                field = getPhoto
-            }else{
-                val list: ArrayList<Movies.Result> = ArrayList()
-                listMovies?.value?.results?.let { list.addAll(it) }
-                getPhoto.value?.results?.let { list.addAll(it) }
-                listMovies?.value?.results = list
-            }
-            return field
-        }
-        private set
 }
